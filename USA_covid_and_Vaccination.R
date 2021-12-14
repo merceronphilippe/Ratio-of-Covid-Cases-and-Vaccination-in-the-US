@@ -3,17 +3,21 @@ library(maps)
 library(dplyr)
 library(ggrepel)
 
+####Travail realise par Philippe Cedrick MERCERON (ME175438) et Rhode Kepler ILFRA (IL161809)
+
+###Importation des donnees 
 States <- map_data("state")
 cas <- read.csv("Casdecovid.csv")
 
+####Ouverture de la librairie GGPLOT pour la visualisation
 ggplot() + 
   geom_polygon( data=States, aes(x=long, y=lat, group=group),
                 color="black", fill="lightblue" )
 
+####Fusion des etats par region et Contruction de la carte thematique
 MergedStates <- inner_join(States, cas, by = "region")
 agg.data <- aggregate(cbind(long,lat,percentage.vaccination,percentage.cases) ~ code, data = MergedStates, mean)
 
-  
 p <- ggplot()
 p <- p + geom_polygon( data=MergedStates, 
                        aes(x=long, y=lat, group=group, fill = total.cases/1000000), 
